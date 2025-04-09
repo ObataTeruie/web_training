@@ -14,12 +14,14 @@
 				<table border="1">
 					<tr>
 						<th>入荷日</th>
+						<th>作家</th>
 						<th>タイトル</th>
 						<th>金額</th>
 					</tr>
 					{% for book in books %}
 						<tr>
 							<td>{{ book.arrival_day }}</td>
+							<td>{{ book.author }}</td>
 							<td>{{ book.title }}</td>
 							<td>{{ book.price }}</td>
 						</tr>
