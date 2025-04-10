@@ -53,10 +53,7 @@ def form():
 @app.route('/register', methods=['POST'])
 def register():
   con = sqlite3.connect(DATABASE)
-  cursor = con.execute('SELECT COUNT(*) FROM books')
-  db_count = cursor.fetchone()[0]
 
-  id = db_count + 1
   title = request.form['title']
   price = request.form['price']
   arrival_day = request.form['arrival_day']
@@ -68,8 +65,8 @@ def register():
   if not title or not price or not arrival_day or not author or not stock:
     return redirect(url_for('form', error_message='全ての必須項目を入力してください'))
 
-  con.execute('INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?)',
-              [id, title, price, arrival_day, author, stock, deleted_at])
+  con.execute('INSERT INTO books (title, price, arrival_day, author, stock, deleted_at) VALUES (?, ?, ?, ?, ?, ?)',
+              [title, price, arrival_day, author, stock, deleted_at])
   con.commit()
   con.close()
 
