@@ -17,6 +17,9 @@
 						<th>作家</th>
 						<th>タイトル</th>
 						<th>金額</th>
+						<th>在庫</th>
+						<th>詳細</th>
+            <th>購入</th>
 					</tr>
 					{% for book in books %}
 						<tr>
@@ -24,10 +27,35 @@
 							<td>{{ book.author }}</td>
 							<td>{{ book.title }}</td>
 							<td>{{ book.price }}</td>
+							<td>{{ book.stock }}</td>
+							<td><a href="{{ url_for('show', id=book.id) }}">詳細</a></td>
+              <td><a href="{{ url_for('order', id=book.id) }}">購入</a></td>
 						</tr>
 					{% endfor %}
 				</table>
 			{% endif %}
 			<a href="{{ url_for('form') }}">編集</a>
+
+      <h2>今月の注文一覧</h2>
+      {% if order_details == [] %}
+        <p>今月の注文はまだありません</p>
+      {% else %}
+        <table border="1">
+          <tr>
+            <th>注文日</th>
+            <th>タイトル</th>
+            <th>購入数</th>
+            <th>金額</th>
+          </tr>
+          {% for order in order_details %}
+            <tr>
+              <td>{{ order.ordered_at }}</td>
+              <td>{{ order.title }}</td>
+              <td>{{ order.volume }}</td>
+              <td>{{ order.total_price }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% endif %}
 	</body>
 </html>

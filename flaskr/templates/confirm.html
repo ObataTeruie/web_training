@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+		<meta charset="UTF-8">
+		<title>サプーアプリ</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"
+	</head>
+  <body>
+    <h1>注文確認</h1>
+    <p>{{ book.title }}</p>
+    <p>単価：{{ book.price }}円</p>
+    <p>個数：{{ volume }}</p>
+    <p>合計金額：{{ total_price }}円</p>
+
+    <form method="POST" action="{{ url_for('complete') }}">
+      <input type="hidden" name="book_id" value="{{ book.id }}">
+      <input type="hidden" name="volume" value="{{ volume }}">
+      <input type="hidden" name="total_price" value="{{ total_price }}">
+      <button type="submit">注文確定</button>
+    </form>
+    <a href="{{ url_for('index') }}">キャンセル</a>
+  </body>
+</html>

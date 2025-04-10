@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+		<meta charset="UTF-8">
+		<title>サプーアプリ</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"
+	</head>
+  <body>
+    <h1>{{ book.title }}の注文</h1>
+    <form method="POST" action="{{ url_for('confirm', id=book.id) }}">
+      <p>価格：{{ book.price }}円</p>
+      <p>個数：<input type="number" name="volume" min="1" max="{{ book.stock }}" required></p> <!-- maxを在庫数に設定 -->
+      <button type="submit">確認</button>
+    </form>
+    <a href="{{ url_for('index') }}">戻る</a>
+  </body>
+</html>
