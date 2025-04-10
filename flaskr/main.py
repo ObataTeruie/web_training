@@ -50,170 +50,170 @@ def form():
 ### registerアクション
 @app.route('/register', methods=['POST'])
 def register():
-    con = sqlite3.connect(DATABASE)
-    cursor = con.execute('SELECT COUNT(*) FROM books')
-    db_count = cursor.fetchone()[0]
+  con = sqlite3.connect(DATABASE)
+  cursor = con.execute('SELECT COUNT(*) FROM books')
+  db_count = cursor.fetchone()[0]
 
-    id = db_count + 1
-    title = request.form['title']
-    price = request.form['price']
-    arrival_day = request.form['arrival_day']
-    author = request.form['author']
-    stock = request.form['stock']
-    deleted_at = None
+  id = db_count + 1
+  title = request.form['title']
+  price = request.form['price']
+  arrival_day = request.form['arrival_day']
+  author = request.form['author']
+  stock = request.form['stock']
+  deleted_at = None
 
-    con.execute('INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [id, title, price, arrival_day, author, stock, deleted_at])
-    con.commit()
-    con.close()
+  con.execute('INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?)',
+              [id, title, price, arrival_day, author, stock, deleted_at])
+  con.commit()
+  con.close()
 
-    return redirect(url_for('index'))
+  return redirect(url_for('index'))
 
 ### showアクション
 @app.route('/show/<int:id>')
 def show(id):
-    con = sqlite3.connect(DATABASE)
-    book = con.execute('SELECT * FROM books WHERE id = ?', (id,)).fetchone()
-    con.close()
+  con = sqlite3.connect(DATABASE)
+  book = con.execute('SELECT * FROM books WHERE id = ?', (id,)).fetchone()
+  con.close()
 
-    if book is None:
-        return "本が見つかりませんでした", 404
+  if book is None:
+    return "本が見つかりませんでした", 404
 
-    book_data = {
-        'id': book[0],
-        'title': book[1],
-        'price': book[2],
-        'arrival_day': book[3],
-        'author': book[4],
-        'stock': book[5],
-    }
+  book_data = {
+    'id': book[0],
+    'title': book[1],
+    'price': book[2],
+    'arrival_day': book[3],
+    'author': book[4],
+    'stock': book[5],
+  }
 
-    return render_template(
-      'show.html', book=book_data
-    )
+  return render_template(
+    'show.html', book=book_data
+  )
 
 ### editアクション
 @app.route('/edit/<int:id>')
 def edit(id):
-    con = sqlite3.connect(DATABASE)
-    row = con.execute('SELECT * FROM books WHERE id = ?', (id,)).fetchone()
-    con.close()
+  con = sqlite3.connect(DATABASE)
+  row = con.execute('SELECT * FROM books WHERE id = ?', (id,)).fetchone()
+  con.close()
 
-    if row is None:
-        return '本が見つかりませんでした', 404
+  if row is None:
+      return '本が見つかりませんでした', 404
 
-    book = {
-        'id': row[0],
-        'title': row[1],
-        'price': row[2],
-        'arrival_day': row[3],
-        'author': row[4],
-        'stock': row[5]
-    }
+  book = {
+    'id': row[0],
+    'title': row[1],
+    'price': row[2],
+    'arrival_day': row[3],
+    'author': row[4],
+    'stock': row[5]
+  }
 
-    return render_template('edit.html', book=book)
+  return render_template('edit.html', book=book)
 
 ### updateアクション
 @app.route('/update/<int:id>', methods=['POST'])
 def update(id):
-    title = request.form['title']
-    price = request.form['price']
-    arrival_day = request.form['arrival_day']
-    author = request.form['author']
-    stock = request.form['stock']
+  title = request.form['title']
+  price = request.form['price']
+  arrival_day = request.form['arrival_day']
+  author = request.form['author']
+  stock = request.form['stock']
 
-    con = sqlite3.connect(DATABASE)
-    con.execute('''
-        UPDATE books 
-        SET title = ?, price = ?, arrival_day = ?, author = ?, stock = ?
-        WHERE id = ?
-    ''', (title, price, arrival_day, author, stock, id))
-    con.commit()
-    con.close()
+  con = sqlite3.connect(DATABASE)
+  con.execute('''
+    UPDATE books 
+    SET title = ?, price = ?, arrival_day = ?, author = ?, stock = ?
+    WHERE id = ?
+  ''', (title, price, arrival_day, author, stock, id))
+  con.commit()
+  con.close()
 
-    return redirect(url_for('show', id=id))
+  return redirect(url_for('show', id=id))
 
 ### deleteアクション
 @app.route('/delete/<int:id>', methods=['POST'])
 def delete(id):
-    deleted_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+  deleted_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    con = sqlite3.connect(DATABASE)
-    con.execute('UPDATE books SET deleted_at = ? WHERE id = ?', (deleted_at, id))
-    con.commit()
-    con.close()
+  con = sqlite3.connect(DATABASE)
+  con.execute('UPDATE books SET deleted_at = ? WHERE id = ?', (deleted_at, id))
+  con.commit()
+  con.close()
 
-    return redirect(url_for('index'))
+  return redirect(url_for('index'))
 
 ### --- 注文に関するアクション ---
 
 ### orderアクション
 @app.route('/order/<int:id>')
 def order(id):
-    con = sqlite3.connect(DATABASE)
-    row = con.execute('SELECT * FROM books WHERE id = ?', (id,)).fetchone()
-    con.close()
+  con = sqlite3.connect(DATABASE)
+  row = con.execute('SELECT * FROM books WHERE id = ?', (id,)).fetchone()
+  con.close()
 
-    if row is None:
-        return '本が見つかりませんでした', 404
+  if row is None:
+      return '本が見つかりませんでした', 404
 
-    book = {
-        'id': row[0],
-        'title': row[1],
-        'price': row[2],
-        'stock': row[5]
-    }
-    return render_template('order.html', book=book)
+  book = {
+    'id': row[0],
+    'title': row[1],
+    'price': row[2],
+    'stock': row[5]
+  }
+  return render_template('order.html', book=book)
 
 ### order_confirmアクション
 @app.route('/order/confirm/<int:id>', methods=['POST'])
 def confirm(id):
-    volume = int(request.form['volume'])
+  volume = int(request.form['volume'])
 
-    con = sqlite3.connect(DATABASE)
-    book_row = con.execute('SELECT * FROM books WHERE id = ?', (id,)).fetchone()
-    con.close()
+  con = sqlite3.connect(DATABASE)
+  book_row = con.execute('SELECT * FROM books WHERE id = ?', (id,)).fetchone()
+  con.close()
 
-    if book_row is None:
-        return '本が見つかりませんでした', 404
+  if book_row is None:
+    return '本が見つかりませんでした', 404
 
-    book = {
-        'id': book_row[0],
-        'title': book_row[1],
-        'price': book_row[2],
-        'stock': book_row[5]
-    }
+  book = {
+    'id': book_row[0],
+    'title': book_row[1],
+    'price': book_row[2],
+    'stock': book_row[5]
+  }
 
-    # 注文数が在庫数を超えていないかチェック
-    if volume > book['stock']:
-        return render_template('order_error.html', book=book)
+  # 注文数が在庫数を超えていないかチェック
+  if volume > book['stock']:
+    return render_template('order_error.html', book=book)
 
-    total_price = book['price'] * volume
+  total_price = book['price'] * volume
 
-    return render_template('confirm.html', book=book, volume=volume, total_price=total_price)
+  return render_template('confirm.html', book=book, volume=volume, total_price=total_price)
 
 ### order_completeアクション
 @app.route('/order/complete', methods=['POST'])
 def complete():
-    book_id = request.form['book_id']
-    volume = request.form['volume']
-    total_price = request.form['total_price']
-    ordered_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+  book_id = request.form['book_id']
+  volume = request.form['volume']
+  total_price = request.form['total_price']
+  ordered_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    # 在庫数を減らす
-    con = sqlite3.connect(DATABASE)
-    con.execute('''
-        UPDATE books
-        SET stock = stock - ?
-        WHERE id = ?
-    ''', (volume, book_id))
+  # 在庫数を減らす
+  con = sqlite3.connect(DATABASE)
+  con.execute('''
+    UPDATE books
+    SET stock = stock - ?
+    WHERE id = ?
+  ''', (volume, book_id))
 
-    # 注文を保存
-    con.execute('''
-        INSERT INTO orders (book_id, volume, total_price, ordered_at)
-        VALUES (?, ?, ?, ?)''',
-        (book_id, volume, total_price, ordered_at))
-    con.commit()
-    con.close()
+  # 注文を保存
+  con.execute('''
+    INSERT INTO orders (book_id, volume, total_price, ordered_at)
+    VALUES (?, ?, ?, ?)''',
+    (book_id, volume, total_price, ordered_at))
+  con.commit()
+  con.close()
 
-    return render_template('complete.html')
+  return render_template('complete.html')

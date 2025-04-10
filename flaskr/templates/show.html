@@ -8,11 +8,11 @@
 <body>
     <h1>{{ book.title }}</h1>
     <ul>
-        <li>価格: ¥{{ book.price }}</li>
-        <li>入荷日: {{ book.arrival_day }}</li>
-        <li>作家: {{ book.author }}</li>
-        <li>在庫: {{ book.stock }}</li>
-        <li><a href="{{ url_for('edit', id=book.id) }}">編集する</a></li>
+      <li>価格: ¥{{ book.price }}</li>
+      <li>入荷日: {{ book.arrival_day }}</li>
+      <li>作家: {{ book.author }}</li>
+      <li>在庫: {{ book.stock }}</li>
+      <li><a href="{{ url_for('edit', id=book.id) }}">編集する</a></li>
     </ul>
     <a href="{{ url_for('order', id=book.id) }}">
       <button>注文する</button>
