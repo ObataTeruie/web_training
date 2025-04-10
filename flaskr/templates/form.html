@@ -7,6 +7,9 @@
 	</head>
 	<body>
 		<h1>サプー書店</h1>
+		{% if error_message %}
+			<p>{{ error_message }}</p>
+		{% endif %}
 		<form method="post" action="{{ url_for('register') }}">
 			<table border="1">
 				<tr>

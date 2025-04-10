@@ -43,9 +43,11 @@ def index():
 ### formアクション
 @app.route('/form')
 def form():
+  error_message = request.args.get('error_message')
   return render_template(
-        'form.html'
-    )
+    'form.html', 
+    error_message=error_message
+  )
 
 ### registerアクション
 @app.route('/register', methods=['POST'])
@@ -61,6 +63,10 @@ def register():
   author = request.form['author']
   stock = request.form['stock']
   deleted_at = None
+
+  # バリデーション：必要なフィールドが空でないことをチェック
+  if not title or not price or not arrival_day or not author or not stock:
+    return redirect(url_for('form', error_message='全ての必須項目を入力してください'))
 
   con.execute('INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?)',
               [id, title, price, arrival_day, author, stock, deleted_at])
